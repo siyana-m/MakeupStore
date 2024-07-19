@@ -1,0 +1,48 @@
+﻿@page
+@model Makeup.Web.Pages.PaymentModel
+@{
+    ViewData["Title"] = "Payment";
+}
+
+@section Scripts {
+     <script src="https://js.stripe.com/v3/"></script>
+     <script>
+        const stripe = Stripe('pk_test_51OtqA2EShR09FPvoPTuhWjtBKlCsHDsSYVGRelNUlxNCFf1vRtB7N6GGYLDAs44ZtYrVdvHktIxPAEwD8t4Hq1Wt00JO2M8jpK');
+         const options = {
+             clientSecret: '@(Model.StripeToken)',
+             appearance: {
+             theme: 'stripe'
+            },
+         };
+         const elements = stripe.elements(options);
+         const paymentElement = elements.create('payment');
+         paymentElement.mount('#payment-element');
+         const form = document.getElementById('payment-form');
+         form.addEventListener('submit', async (event) => {
+             event.preventDefault();
+             const { error } = await stripe.confirmPayment({
+                 elements,
+                 confirmParams: {
+                 return_url: 'https://localhost:7233/PaymentResponse', /* 7138 */
+                 },
+             });
+             if (error) {
+                 const messageContainer = document.querySelector('#alertmessage');
+                 messageContainer.textContent = error.message;
+                 messageContainer.style.display = 'block';
+             }
+         });
+     </script>
+}
+
+ <div class="row">
+    <div id="alert-container" class="mt-3">
+        <div id="alert-message" class="alert alert-danger" role="alert" style="display:none;">
+        </div>
+    </div>
+     <form id="payment-form" data-secret="@Model.StripeToken">
+         <div id="payment-element">
+         </div>
+         <button id="submit" class="btn btn-primary">Плати</button>
+     </form>
+ </div>

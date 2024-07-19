@@ -1,0 +1,88 @@
+﻿@page
+@model Makeup.Web.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    .valid-password {
+        color: green;
+    }
+</style>
+
+<h1>@ViewData["Title"]</h1>
+@if (Model.ErrorMessage != string.Empty)
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+<form method="post">
+    <div class="form-group">
+        <label for="Email">Email address</label>
+        <input type="email" class="form-control" id="Email" name="Email"
+               placeholder="Enter email">
+    </div>
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password"
+               name="Password" placeholder="Password">
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <input type="checkbox" onclick="togglePasswordVisibility('Password')"> Show
+            </div>
+        </div>
+        <ul id="password-requirements" class="text-danger small"></ul>
+    </div>
+
+    <div class="form-group">
+        <label for="ConfirmPassword">Confirm Password</label>
+        <input type="password" class="form-control" id="ConfirmPassword"
+               name="ConfirmPassword" placeholder="Confirm password">
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <input type="checkbox" onclick="togglePasswordVisibility('ConfirmPassword')"> Show
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+<script>
+    document.getElementById("Password").addEventListener("input", function () {
+        var password = this.value;
+        var requirements = document.getElementById("password-requirements");
+        var isValid = true;
+
+        requirements.innerHTML = "";
+
+        if (password.length < 5) {
+            requirements.innerHTML += "<li>Password must be at least 5 characters long.</li>";
+            isValid = false;
+        }
+        if (!/(?=.*[a-z])/.test(password)) {
+            requirements.innerHTML += "<li>Password must contain at least one lowercase letter.</li>";
+            isValid = false;
+        }
+        if (!/(?=.*[A-Z])/.test(password)) {
+            requirements.innerHTML += "<li>Password must contain at least one uppercase letter.</li>";
+            isValid = false;
+        }
+        if (!/(?=.*\d)/.test(password)) {
+            requirements.innerHTML += "<li>Password must contain at least one digit.</li>";
+            isValid = false;
+        }
+
+        if (isValid) {
+            requirements.innerHTML += "<li class='valid-password'>Password meets all requirements.</li>";
+        }
+    });
+
+    function togglePasswordVisibility(inputId) {
+        var input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+</script>

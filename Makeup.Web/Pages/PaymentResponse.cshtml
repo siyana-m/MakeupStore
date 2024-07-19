@@ -1,0 +1,55 @@
+﻿@page
+@model Makeup.Web.Pages.PaymentResponseModel
+@{
+    ViewData["Title"] = "Response";
+}
+
+@section Scripts
+{
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe('pk_test_51OtqA2EShR09FPvoPTuhWjtBKlCsHDsSYVGRelNUlxNCFf1vRtB7N6GGYLDAs44ZtYrVdvHktIxPAEwD8t4Hq1Wt00JO2M8jpK');
+        const clientSecret = new URLSearchParams(window.location.search).get(
+            'payment_intent_client_secret'
+        );
+        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+            const message = document.querySelector('#message')
+            switch (paymentIntent.status) {
+                case 'succeeded':
+                    message.innerText = 'Successful payment';
+                    message.classList.add('alert-success');
+                    break;
+                case 'processing':
+                    message.innerText = "Payment is still being processed.";
+                    message.classList.add('alert-info');
+                    break;
+                case 'requires_payment_method':
+                    message.innerText = 'Payment error. Please, try again.';
+                    message.classList.add('alert-error');
+                    document.querySelector('#back-to-payment').style.display =
+                        'block';
+                    break;
+                default:
+                    message.innerText = 'An error occurred, please try again or contact us.';
+                    message.classList.add('alert-error');
+                    document.querySelector('#back-to-payment').style.display =
+                        'block';
+                    break;
+            }
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-12">
+        <div id="message" class="alert" role="alert">
+        </div>
+        <a asp-page="Payment" id="back-to-payment" class="btn btn-info"
+           style="display: none;">Back to Payment page</a>
+    </div>
+</div>
+
+
+@* TEST CARD NUMBERS:
+- 4242 4242 4242 4242
+- 4000 0025 0000 3155
+- 4000 0000 0000 9995 *@

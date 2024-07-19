@@ -1,0 +1,24 @@
+﻿@page
+@model Makeup.Web.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>@ViewData["Title"]</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
+<form method="post">
+    <div class="form-group">
+        <label for="Email">Email address</label>
+        <input type="email" class="form-control" id="Email" name="Email"
+               placeholder="Enter email">
+    </div>
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password"
+               name="Password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Log In</button>
+</form>

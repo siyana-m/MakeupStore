@@ -1,0 +1,175 @@
+﻿@page "{id:int}"
+@model Makeup.Web.Pages.ProductModel
+@{
+    ViewData["Title"] = @Model.Product?.Name;
+}
+
+<style>
+    .video-container {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        margin-bottom: 40px; 
+        text-align: center;
+        background-color: #f9f9f9; 
+        padding: 15px;
+        border-radius: 8px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        margin: 10px; 
+    }
+
+    .video-container:hover {
+        background-color: lightgray;
+    }
+
+    .video-iframe {
+        width: 100%; 
+        height: 300px; 
+        margin-bottom: 10px; 
+    }
+    .video-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        height: 2.4em; 
+        overflow: hidden; 
+        display: -webkit-box; 
+        -webkit-box-orient: vertical; 
+        -webkit-line-clamp: 2; 
+        max-height: 2.4em; 
+        line-height: 1.2em; 
+        text-overflow: ellipsis; 
+        text-align: center;
+    }
+    .video-description {
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 10px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; 
+        -webkit-box-orient: vertical;
+        height: 3.2rem; 
+        text-align: center;
+    }
+    .centered-heading {
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        font-size: 2rem;
+        background-color: rgb(242, 201, 219); 
+        color: rgb(204, 51, 51); 
+        padding: 20px; 
+        border-radius: 8px; 
+    }
+
+    .video-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap; 
+        gap: 10px; 
+    }
+
+    .product-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        height: 200px; 
+    }
+
+        .product-image-container img {
+            max-height: 100%; 
+            max-width: 100%; 
+            object-fit: contain; 
+        }
+
+    .btn-custom {
+        background-color: rgb(214, 92, 92);
+        color: black; 
+        border: none; 
+        padding: 10px 20px; 
+        font-size: 1rem; 
+        border-radius: 5px; 
+        cursor: pointer; 
+    }
+
+        .btn-custom:hover {
+            background-color: rgb(204, 51, 51); 
+            color: white;
+        }
+</style>
+
+<div class="row">
+    <div class="col-md-3 product-image-container">
+         @if (Model.Product?.Image != null)
+         {
+         <img
+        src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Product.Image)}")" />
+         }
+         else
+         {
+         <img src="~/images/placeholder.png" />
+         }
+     </div>
+    <div class="col-md-9">
+        <h2>@Model.Product?.Name</h2>
+        <p>@Model.Product?.Description</p>
+        <p>Price: @Model.Product?.Price @Html.Raw("&nbsp;$")</p>
+        <form method="post">
+            <input type="hidden" name="productId" value="@Model.Product?.Id" />
+            <button class="btn btn-custom">Add to cart</button>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+     <tbody>
+         <tr>
+             <td>Code</td>
+             <td>@Model.Product?.Code</td>
+         </tr>
+         <tr>
+             <td>Brand</td>
+             <td>
+                     <ul>
+                     @foreach (var brand in Model.Product!.Brands!)
+                    {
+                     <li>@brand.Name</li>
+                     }
+                     </ul>
+             </td>
+         </tr>
+         <tr>
+            <td>Categories</td>
+            <td>
+                     <ul>
+                     @foreach (var category in Model.Product.Categories!)
+                    {
+                     <li>@category.Name</li>
+                     }
+                     </ul>
+            </td>
+         </tr>
+     </tbody>
+</table>
+
+<h2 class="centered-heading">YouTube Reviews:</h2>
+
+<div class="video-row">
+    @foreach (var video in Model.Youtube!.Videos!.Take(3))
+    {
+        <div class="col-md-4 video-container">
+            <h3 class="video-title">@video.Title</h3>
+            <p class="video-description">@video.Description</p>
+            <!-- Embed YouTube video using IFrame -->
+            <iframe class="video-iframe" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+@*         <div class="col-2">
+            <h3>@video.Title</h3>
+            <p>@video.Description</p>
+            <iframe width="100%" height="250" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div> *@
+    }
+</div>
+

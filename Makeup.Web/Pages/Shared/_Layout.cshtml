@@ -1,0 +1,147 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .user-name {
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: ellipsis;
+        max-width: 1000px; 
+        margin-right: 10px;
+        color: white !important; 
+        font-weight: bold; 
+    }
+
+    .navbar-custom {
+        background-color: rgb(214, 92, 92); 
+        color: #fff; 
+        font-weight: bold; 
+    }
+
+    .footer-custom {
+        background-color: rgb(234, 164, 201); 
+        color: #fff;
+    }
+
+    body {
+        background-color: rgb(213, 214, 216); 
+    }
+
+    /* Custom button styles */
+    .btn-custom-login {
+        background-color: white !important ;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .btn-custom-register {
+        background-color: white !important; 
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .btn-custom-logout {
+        background-color: black !important; 
+        color: #fff;
+        font-weight: bold !important;
+    }
+
+    .btn-custom {
+        padding: 10px 20px; 
+        cursor: pointer;
+        white-space: nowrap; /
+        margin-left: 20px; 
+        margin-right: 20px;
+    }
+
+    .text-primary {
+        color: white;
+    }
+
+</style>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/6075201.ico" type="image/x-icon" style="margin-left: 20px;"/>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Makeup.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light navbar-custom border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Index">
+                    <img src="~/6075201.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
+                    Makeup Chic
+                    </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+@*                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li> *@
+@*                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li> *@
+                    </ul>
+                </div>
+            </div>
+
+            <div class="user-info">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @* <div class="text-primary user-name"> *@
+                <div class=" user-name">
+                    Hello, @UserManager.GetUserName(User)!
+                </div>
+                    <a asp-page="Logout" class="btn btn-custom btn-custom-logout">Log Out</a>
+            }
+            else
+            {
+                    <a asp-page="Login" class="btn btn-custom btn-custom-login">Log In</a>
+                    <a asp-page="Register" class="btn btn-custom btn-custom-register">Sign up</a>
+            }
+            </div>
+
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted footer-custom">
+        <div class="container">
+            &copy; 2024 - Makeup Chic - 20118046. <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
